@@ -1,6 +1,6 @@
 package ru.yandex.practicum;
 
-public class WordleDictionaryLoadException extends Exception{
+public class WordleDictionaryLoadException extends Exception {
     public WordleDictionaryLoadException(String message) {
         super(message);
     }
