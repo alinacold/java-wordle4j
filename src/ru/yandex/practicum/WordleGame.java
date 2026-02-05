@@ -36,7 +36,6 @@ public class WordleGame {
         this.answer = dictionary.getRandomWord();
         this.log = log;
         this.log.println("[WordleGame] Игра началась. Количество попыток: " + stepsLeft);
-
     }
 
     // Создание конструктора с указанным ответом для тестирования
@@ -73,8 +72,6 @@ public class WordleGame {
     public int getStepsLeft() {
         return stepsLeft;
     }
-
-    //package-private
 
     String getAnswer() {
         return answer;
@@ -127,10 +124,12 @@ public class WordleGame {
 
         stepsLeft--;
 
-        String hint = WordleDictionary.buildHint(guess, answer);
+        String hint = buildHint(guess, answer);
         history.put(guess, hint);
 
-        log.println("[WordleGame] Догадка = " + guess + "; Подсказка = " + hint + "; Оставшееся количество попыток = " + stepsLeft);
+        log.println("[WordleGame] Догадка = " + guess
+                + "; Подсказка = " + hint
+                + "; Оставшееся количество попыток = " + stepsLeft);
 
         return hint;
     }
@@ -144,7 +143,7 @@ public class WordleGame {
 
         List<String> all = dictionary.getWords();
 
-        // Проверяем слово на участие раннее в игре
+        // Проверяем слово на участие ранее в игре
         for (String candidate : all) {
             if (candidate.equals(answer)) {
                 continue;
@@ -169,12 +168,65 @@ public class WordleGame {
             String previousGuess = entry.getKey();
             String expectedHint = entry.getValue();
 
-            String actualHint = WordleDictionary.buildHint(previousGuess, candidate);
+            String actualHint = buildHint(previousGuess, candidate);
             if (!actualHint.equals(expectedHint)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    // Формирование подсказки в игре
+    public static String buildHint(String guess, String answer) {
+        if (guess == null || answer == null) {
+            throw new IllegalArgumentException("Пустое значение догадки или ответа");
+        }
+
+        String normalizedGuess = WordleDictionary.normalize(guess);
+        String normalizedAnswer = WordleDictionary.normalize(answer);
+
+        if (normalizedGuess.length() != 5 || normalizedAnswer.length() != 5) {
+            throw new IllegalArgumentException("Слова должны быть длиной 5");
+        }
+
+        char[] hint = new char[]{'-', '-', '-', '-', '-'};
+
+        // Подсчет количества одинаковых букв в ответе
+        LinkedHashMap<Character, Integer> lettersCountInAnswer = new LinkedHashMap<>();
+        for (int i = 0; i < 5; i++) {
+            char c = normalizedAnswer.charAt(i);
+            lettersCountInAnswer.put(c, lettersCountInAnswer.getOrDefault(c, 0) + 1);
+        }
+
+        // Если позиция буквы в догадке и в ответе совпала, ставим "+"
+        for (int i = 0; i < 5; i++) {
+            char g = normalizedGuess.charAt(i);
+            char a = normalizedAnswer.charAt(i);
+
+            if (g == a) {
+                hint[i] = '+';
+                lettersCountInAnswer.put(g, lettersCountInAnswer.get(g) - 1);
+            }
+        }
+
+        // Если буква догадки встречается в ответе, но стоит в другом месте, ставим "^", иначе - "-"
+        for (int i = 0; i < 5; i++) {
+            if (hint[i] == '+') {
+                continue;
+            }
+
+            char g = normalizedGuess.charAt(i);
+            Integer letterCount = lettersCountInAnswer.get(g);
+
+            if (letterCount != null && letterCount > 0) {
+                hint[i] = '^';
+                lettersCountInAnswer.put(g, letterCount - 1);
+            } else {
+                hint[i] = '-';
+            }
+        }
+
+        return new String(hint);
     }
 }

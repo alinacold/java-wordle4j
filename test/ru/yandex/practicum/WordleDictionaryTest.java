@@ -48,21 +48,21 @@ class WordleDictionaryTest {
         assertTrue(dictionary.contains("КОШКА"));
         assertFalse(dictionary.contains("ёлка"));
         assertTrue(dictionary.contains("актер"));
-        assertEquals(2, dictionary.size()); // кошка, елка
+        assertEquals(2, dictionary.size());
     }
 
     @Test
     void buildHint_allCorrect_shouldReturnPlus5() {
-        assertEquals("+++++", WordleDictionary.buildHint("давка", "давка"));
+        assertEquals("+++++", WordleGame.buildHint("давка", "давка"));
     }
 
     @Test
     void buildHint_exampleFromTask_shouldMatch() {
-        assertEquals("+-+^-", WordleDictionary.buildHint("балет", "белое"));
+        assertEquals("+-+^-", WordleGame.buildHint("балет", "белое"));
     }
 
     @Test
     void buildHint_withRepeatingLetters_shouldNotOvercount() {
-        assertEquals("++-+^", WordleDictionary.buildHint("комок", "кокос"));
+        assertEquals("++-+^", WordleGame.buildHint("комок", "кокос"));
     }
 }

@@ -84,7 +84,6 @@ public class WordleDictionary {
             return null;
         }
         return s.trim().toLowerCase().replace('ё', 'е');
-
     }
 
     // Получение случайного слова из словаря
@@ -96,14 +95,16 @@ public class WordleDictionary {
 
         int idx = (int) (Math.random() * words.size());
 
-        log.println("[WordleDictionary] Загаданное слово: "  + words.get(idx));
+        log.println("[WordleDictionary] Загаданное слово: " + words.get(idx));
 
         return words.get(idx);
     }
 
     // Проверка слова на валидность для игры
     public static boolean isValidGameWord(String word) {
-        if (word == null) return false;
+        if (word == null) {
+            return false;
+        }
         if (word.length() != 5) {
             return false;
         }
@@ -115,58 +116,5 @@ public class WordleDictionary {
         }
 
         return true;
-    }
-
-    // Формирование подсказки в игре
-    public static String buildHint(String guess, String answer) {
-        if (guess == null || answer == null) {
-            throw new IllegalArgumentException("Пустое значение догадки или ответа");
-        }
-
-        String normalizedGuess = normalize(guess);
-        String normalizedAnswer = normalize(answer);
-
-        if (normalizedGuess.length() != 5 || normalizedAnswer.length() != 5) {
-            throw new IllegalArgumentException("Слова должны быть длиной 5");
-        }
-
-        char[] hint = new char[]{'-', '-', '-', '-', '-'};
-
-        // Подсчет количества одинаковых букв в ответе
-        LinkedHashMap<Character, Integer> lettersCountInAnswer = new LinkedHashMap<>();
-        for (int i = 0; i < 5; i++) {
-            char c = normalizedAnswer.charAt(i);
-            lettersCountInAnswer.put(c, lettersCountInAnswer.getOrDefault(c, 0) + 1);
-        }
-
-        // Если позиция буквы в догадке и в ответе совпала, ставим "+"
-        for (int i = 0; i < 5; i++) {
-            char g = normalizedGuess.charAt(i);
-            char a = normalizedAnswer.charAt(i);
-
-            if (g == a) {
-                hint[i] = '+';
-                lettersCountInAnswer.put(g, lettersCountInAnswer.get(g) - 1);
-            }
-        }
-
-        // Если буква догадки встречается в ответе, но стоит в другом месте, ставим "^", иначе - "-"
-        for (int i = 0; i < 5; i++) {
-            if (hint[i] == '+') {
-                continue;
-            }
-
-            char g = normalizedGuess.charAt(i);
-            Integer letterCount = lettersCountInAnswer.get(g);
-
-            if (letterCount != null && letterCount > 0) {
-                hint[i] = '^';
-                lettersCountInAnswer.put(g, letterCount - 1);
-            } else {
-                hint[i] = '-';
-            }
-        }
-
-        return new String(hint);
     }
 }

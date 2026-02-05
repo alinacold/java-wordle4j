@@ -124,6 +124,6 @@ class WordleGameTest {
 
         String suggestion = game.suggestWord();
 
-        assertEquals(hint, WordleDictionary.buildHint("атака", suggestion));
+        assertEquals(hint, WordleGame.buildHint("атака", suggestion));
     }
 }

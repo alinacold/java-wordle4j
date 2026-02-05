@@ -10,7 +10,8 @@ public class WordleDictionaryLoader {
 
         List<String> lines = new ArrayList<>();
 
-        try (FileReader fileReader = new FileReader(filename, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(fileReader)) {
+        try (FileReader fileReader = new FileReader(filename, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(fileReader)) {
 
             while (br.ready()) {
                 String line = br.readLine();
@@ -23,7 +24,6 @@ public class WordleDictionaryLoader {
             log.println("[WordleDictionaryLoader] " + e.getMessage());
             e.printStackTrace(log);
             throw new WordleDictionaryFileNotFoundException("Файл словаря не найден: " + filename, e);
-
         } catch (IOException e) {
             log.println("[WordleDictionaryLoader] " + e.getMessage());
             e.printStackTrace(log);

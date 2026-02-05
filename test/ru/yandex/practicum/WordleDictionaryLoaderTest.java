@@ -51,7 +51,9 @@ class WordleDictionaryLoaderTest {
     @Test
     void load_emptyFile_shouldThrowIsEmptyException() throws Exception {
 
-        try (FileWriter fw = new FileWriter(testFileName, StandardCharsets.UTF_8)) {}
+        try (FileWriter fw = new FileWriter(testFileName, StandardCharsets.UTF_8)) {
+
+        }
 
         boolean expectedThrown = false;
         boolean wrongThrown = false;
